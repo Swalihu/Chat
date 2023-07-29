@@ -5,53 +5,26 @@
 </head>
 <body>
     <style>
-        <!-- ... (your CSS styles) ... -->
+        /* ... (your CSS styles) ... */
     </style>
-    <h1>PeerJS Chat</h1>
+    <h1>PeerJS Chat - User 1</h1>
     <div id="chatBox"></div>
     <input type="text" id="messageInput" placeholder="Type your message">
     <button onclick="sendMessage()">Send</button>
 
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
     <script>
+        const user1Id = "2059b442-12be-46c1-8585-78b5bc96dbf2"; // Unique PeerJS ID for User 1
         let peer; // Declare peer variable globally
         let conn; // Declare connection variable globally
 
         const chatBox = document.getElementById("chatBox");
 
-        const appendMessage = (message, sender) => {
-            const messageDiv = document.createElement("div");
-            messageDiv.textContent = `${sender}: ${message}`;
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        };
+        // ... (appendMessage, startChat, and sendMessage functions) ...
 
-        const startChat = async () => {
-            try {
-                const customId = "2059b442-12be-46c1-8585-78b5bc96dbf2"; // Your specific PeerJS ID here
-                peer = new Peer(customId);
-
-                peer.on('open', (id) => {
-                    console.log('My peer ID is: ' + id);
-                });
-
-                peer.on('connection', (dataConnection) => {
-                    conn = dataConnection;
-                    conn.on('data', (data) => {
-                        appendMessage(data, 'Other');
-                    });
-                });
-
-                peer.on('error', (err) => {
-                    console.error('Error:', err);
-                });
-            } catch (err) {
-                console.error('Error creating Peer:', err);
-            }
-        };
-
+        // Function to connect to User 2
         const connectToPeer = () => {
-            const remotePeerId = "480cc73d-7cb7-47e1-bb91-57b423a0df7f"; // Set the receiver's PeerJS ID here
+            const remotePeerId = "480cc73d-7cb7-47e1-bb91-57b423a0df7f"; // Set the receiver's PeerJS ID here (User 2's ID)
             conn = peer.connect(remotePeerId);
             conn.on('open', () => {
                 console.log('Connected to remote peer:', remotePeerId);
@@ -66,17 +39,12 @@
             });
         };
 
-        const sendMessage = () => {
-            const message = document.getElementById("messageInput").value;
-            if (message.trim() !== '') {
-                appendMessage(message, 'You');
-                conn.send(message);
-                document.getElementById("messageInput").value = '';
-            }
-        };
-
         // Start the chat when the page loads
         startChat();
+
+        // Connect to User 2
+        connectToPeer();
     </script>
 </body>
 </html>
+
